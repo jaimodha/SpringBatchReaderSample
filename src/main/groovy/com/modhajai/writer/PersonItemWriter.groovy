@@ -14,3 +14,4 @@ class PersonItemWriter implements ItemWriter<Person> {
         println items
     }
 }
+
