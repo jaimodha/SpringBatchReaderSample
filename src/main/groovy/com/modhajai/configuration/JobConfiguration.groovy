@@ -2,6 +2,7 @@ package com.modhajai.configuration
 
 import com.modhajai.mapper.PersonFiledSetMapper
 import com.modhajai.model.Person
+import com.modhajai.writer.PersonItemWriter
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory
@@ -30,6 +31,9 @@ class JobConfiguration {
     @Autowired
     StepBuilderFactory stepBuilderFactory
 
+    @Autowired
+    PersonItemWriter personItemWriter
+
     @Bean
     public FlatFileItemReader<Person> personFlatFileItemReader() {
         FlatFileItemReader<Person> reader = new FlatFileItemReader<>()
@@ -48,16 +52,11 @@ class JobConfiguration {
     }
 
     @Bean
-    public ItemReader<Person> personItemReader() {
-        return items
-    }
-
-    @Bean
     public Step getData() {
         return stepBuilderFactory.get('readstep')
                     .<Person, Person> chunk(10)
                     .reader(personFlatFileItemReader())
-                    .writer(personItemReader())
+                    .writer(personItemWriter)
                     .build()
     }
 
